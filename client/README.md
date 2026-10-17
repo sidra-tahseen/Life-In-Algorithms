@@ -42,13 +42,13 @@ The simulator uses a weighted scoring approach with normalization.
 
 ### 1. Weight Normalization
 
-Criterion weights are normalized so that their relative importance is preserved, regardless of the original weight values.
+Criterion weights are normalized so their relative importance is preserved, regardless of the original weight values.
 
 For criterion \(i\):
 
-\[
+$$
 w_i' = \frac{w_i}{\sum_{j=1}^{n} w_j}
-\]
+$$
 
 ### 2. Score Normalization
 
@@ -56,15 +56,15 @@ Each criterion score is rated from 1 to 5 and converted to a utility value betwe
 
 For a **benefit criterion**, where higher is better:
 
-\[
+$$
 u(s) = \frac{s-1}{4}
-\]
+$$
 
 For a **cost criterion**, where lower is better:
 
-\[
+$$
 u(s) = \frac{5-s}{4}
-\]
+$$
 
 Here, \(s\) is the original score.
 
@@ -72,11 +72,12 @@ Here, \(s\) is the original score.
 
 The normalized utility of each criterion is multiplied by its normalized weight. The contributions are added to calculate the alternative's final score.
 
-\[
-S_k = 100\sum_{i=1}^{n} w_i'u_{ik}
-\]
+$$
+S_k = 100\sum_{i=1}^{n} w_i' u_{ik}
+$$
 
 Where:
+
 - \(S_k\) is the final score of alternative \(k\), expressed out of 100.
 - \(w_i'\) is the normalized weight of criterion \(i\).
 - \(u_{ik}\) is the normalized utility of alternative \(k\) for criterion \(i\).
@@ -87,8 +88,7 @@ Alternatives are ranked in descending order of their final scores.
 
 The simulator evaluates decisions across multiple weighting scenarios to examine whether the ranking remains stable as criterion importance changes.
 
-This helps identify decisions that are sensitive to the user's priorities. The results depend on the selected alternatives, criteria, weights, and scores; they should be interpreted as decision-support information rather than an objectively guaranteed best choice.
-
+This helps identify decisions that are sensitive to the user's priorities. Results should be interpreted as decision-support information rather than a guaranteed objectively best choice.
 ## Tech Stack
 
 | Layer | Technologies |
