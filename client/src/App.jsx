@@ -1,6 +1,8 @@
 
 import { useState } from "react";
 import "./App.css";
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 function App() {
     const [scenario, setScenario] = useState("");
     const [criteria, setCriteria] = useState([
@@ -146,7 +148,7 @@ function App() {
 
         try {
             const response = await fetch(
-                "http://localhost:5000/api/decisions",
+                `${API_BASE_URL}/api/decisions`, 
                 {
                     method: "POST",
                     headers: {
@@ -206,7 +208,7 @@ async function runSensitivityAnalysis() {
 
     try {
         const response = await fetch(
-            "http://localhost:5000/api/decisions/sensitivity",
+            `${API_BASE_URL}/api/decisions/sensitivity`,
             {
                 method: "POST",
                 headers: {
@@ -261,6 +263,33 @@ async function runSensitivityAnalysis() {
         ]);
         window.scrollTo({ top: 0, behavior: "smooth" });
     }
+
+    async function loadHistory() {
+    setHistoryLoading(true);
+    setHistoryError("");
+
+    try {
+        const response = await fetch(
+            `${API_BASE_URL}/api/decisions/history`
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Could not load decision history.");
+        }
+
+        setHistory(data.decisions || []);
+    } catch (err) {
+        setHistoryError(
+            err.message === "Failed to fetch"
+                ? "Cannot reach the backend. Check that the server is running."
+                : err.message
+        );
+    } finally {
+        setHistoryLoading(false);
+    }
+}
 
     return (
         <main className="app">
@@ -659,32 +688,7 @@ async function runSensitivityAnalysis() {
             <footer>Structured thinking for real-life choices.</footer>
         </main>
     );
-    async function loadHistory() {
-    setHistoryLoading(true);
-    setHistoryError("");
 
-    try {
-        const response = await fetch(
-            "http://localhost:5000/api/decisions/history"
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.error || "Could not load decision history.");
-        }
-
-        setHistory(data.decisions || []);
-    } catch (err) {
-        setHistoryError(
-            err.message === "Failed to fetch"
-                ? "Cannot reach the backend. Check that the server is running."
-                : err.message
-        );
-    } finally {
-        setHistoryLoading(false);
-    }
-}
 }
 
 export default App;
